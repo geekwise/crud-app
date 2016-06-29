@@ -93,6 +93,8 @@ export LD_LIBRARY_PATH=/lib64:/lib:~/.c9/local/libtu/.nvm/versions/nod
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:$PKG_CONFIG_PATH
 #---------------------------------
 ## Setup linux brew
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 export LINUXBREWHOME=$HOME/.linuxbrew
 export PATH=$LINUXBREWHOME/bin:$PATH
 export MANPATH=$LINUXBREWHOME/man:$MANPATH
@@ -148,8 +150,8 @@ source ~/.profile
 # 	exit 1
 # fi
 
-sudo apt-get update
-sudo apt-get install "python2.7-dev"
+sudo apt-get update && apt-get upgrade -y && apt-get autoremove && apt-get autoclean
+sudo apt-get --assume-yes install "python2.7-dev"
 
 # e_header "install python2.7-dev / needed for watchman install"
 # read -p "(yes/no/skip)?" choice
@@ -171,7 +173,11 @@ read -p "(yes/no/skip)?" choice
 case "$choice" in 
   y|Y|yes|YES ) e_note "updating for linux brew" \
   && sudo rm -rf /var/cache/apt/archives/lock \
-  && sudo apt-get update \
+  && sudo apt-get update -y \
+  && echo "$BREW_PATHS" > ~/.bash_aliases \
+  && source ~/.bash_aliases \
+  && source ~/.bashrc \
+  && source ~/.profile \
 	&& sudo apt-get install -y build-essential make cmake scons curl git \
 	ruby autoconf automake autoconf-archive \
 	gettext libtool flex bison \
@@ -218,6 +224,7 @@ case "$choice" in
   && nvm use \
   && e_note "created .nvmrc file to use latest version of node" \
 	&& source ~/.nvm/nvm.sh \
+	&& npm set progress=false \
 	&& yes | nvm install stable \
 	&& yes | nvm alias default stable \
 	&& yes | nvm use stable \
