@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.css']
 })
 export class AppComponent {
-  data = 'app-root';
+  data = 'app-root ' + Date.now() ;
 }
